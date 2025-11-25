@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الشؤون الإدارية - هيئة الهلال الأحمر السعودي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root{--primary:#c0392b;--accent:#e74c3c;--card-bg:rgba(15,15,25,0.94)}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:'Tajawal',sans-serif;color:#fff;min-height:100vh;overflow-x:hidden;position:relative;
+            background:#000;
+        }
+
+        /* خلفية GIF كاملة الشاشة */
+        #animated-bg{
+            position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.88;
+        }
+
+        /* النجوم فوق الخلفية */
+        canvas#stars{
+            position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;
+        }
+
+        /* الصورة الثابتة يمين فوق */
+        .right-img{
+            position:fixed;top:15px;right:15px;width:130px;height:130px;z-index:999;
+            border:4px solid var(--accent);border-radius:20px;
+            box-shadow:0 0 50px rgba(231,76,60,0.9);
+            background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);
+            padding:8px;animation:glow 4s infinite alternate;
+        }
+        .right-img img{width:100%;height:100%;border-radius:15px;object-fit:contain}
+
+        /* شعار الهلال الأحمر في المنتصف */
+        .logo{
+            position:fixed;top:20px;left:50%;transform:translateX(-50%);width:100px;height:100px;z-index:1000;
+            border-radius:50%;border:5px solid var(--accent);padding:8px;
+            background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);
+            box-shadow:0 0 60px rgba(231,76,60,1);
+        }
+        .logo img{width:100%;height:100%;border-radius:50%}
+
+        @keyframes glow{0%{box-shadow:0 0 40px rgba(231,76,60,0.7)}100%{box-shadow:0 0 80px rgba(231,76,60,1)}}
+
+        .admin-container{
+            position:relative;z-index:2;max-width:900px;margin:180px auto 100px;
+            background:var(--card-bg);backdrop-filter:blur(28px);padding:60px;
+            border-radius:50px;border:4px solid var(--primary);
+            box-shadow:0 0 90px rgba(231,76,60,0.65);
+        }
+        .admin-container::before{
+            content:'';position:absolute;top:0;left:0;right:0;height:8px;
+            background:linear-gradient(90deg,var(--primary),var(--accent),#a93226);
+            border-radius:46px 46px 0 0;
+        }
+
+        #formTitle{font-size:46px;text-align:center;margin-bottom:45px;color:var(--accent);
+                   text-shadow:0 0 40px rgba(231,76,60,.9);letter-spacing:1px}
+
+        select#requestType{
+            width:100%;padding:22px;margin:30px 0;border:4px solid var(--primary);border-radius:28px;
+            background:rgba(20,20,30,0.95)!important;backdrop-filter:blur(12px);color:#fff;
+            font-size:26px;font-weight:700;text-align:center;cursor:pointer;appearance:none;
+            background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 24 24' fill='none' stroke='%23e74c3c' stroke-width='4'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat:no-repeat;background-position:left 28px center;padding-left:70px;
+            box-shadow:0 0 40px rgba(231,76,60,0.5);
+        }
+        select#requestType:hover{transform:scale(1.02);box-shadow:0 0 70px rgba(231,76,60,0.9);}
+
+        select:not(#requestType){
+            width:100%;padding:18px;margin:12px 0;border:3px solid var(--primary);border-radius:20px;
+            background:rgba(30,30,40,0.98)!important;backdrop-filter:blur(10px);color:#fff;
+            font-size:21px;text-align:center;font-weight:600;cursor:pointer;appearance:none;
+            background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23e74c3c' stroke-width='3'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-position:left 18px center;padding-left:50px;
+        }
+
+        .form-section{display:none;animation:fadeIn .6s}
+        .form-section.active{display:block}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+        label{display:block;margin:20px 0 8px;font-size:23px;color:var(--accent)}
+        input{
+            width:100%;padding:22px;margin:10px 0;border:3px solid var(--primary);border-radius:22px;
+            background:rgba(255,255,255,0.08);color:#fff;font-size:22px;text-align:center;
+        }
+        input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 25px rgba(231,76,60,0.7);}
+
+        button{
+            width:100%;padding:25px;margin-top:40px;background:linear-gradient(135deg,var(--accent),#ff6b5b);
+            border:none;border-radius:28px;color:#fff;font-size:28px;font-weight:900;cursor:pointer;
+            box-shadow:0 15px 40px rgba(231,76,60,.6);transition:.4s
+        }
+        button:hover{transform:scale(1.05);box-shadow:0 25px 70px rgba(231,76,60,.9);}
+
+        .toast{
+            position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+            background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;
+            padding:40px 80px;border-radius:50px;font-size:36px;font-weight:900;z-index:99999;
+            transition:.5s
+        }
+        .toast.show{transform:translate(-50%,-50%) scale(1)}
+
+        footer{
+            position:fixed;bottom:0;left:0;right:0;
+            background:linear-gradient(90deg,rgba(192,57,43,0.98),rgba(231,76,60,0.98));
+            backdrop-filter:blur(15px);text-align:center;padding:18px 0;
+            font-size:20px;font-weight:700;z-index:9998;border-top:3px solid #fff;
+            box-shadow:0 -10px 30px rgba(231,76,60,0.8);
+            transform:translateY(100%);transition:transform 0.5s cubic-bezier(0.25,0.8,0.25,1);
+        }
+        footer.show{transform:translateY(0);}
+        footer span{color:#fff;text-shadow:0 0 25px #fff;font-weight:900;font-size:22px;}
+    </style>
+</head>
+<body>
+
+<!-- خلفية GIF كاملة الشاشة -->
+<img src="https://i.postimg.cc/fTcBKcMZ/a-781de33af7453c245a7724d69c670ca6.gif" id="animated-bg" alt="خلفية متحركة">
+
+<!-- النجوم المتساقطة -->
+<canvas id="stars"></canvas>
+
+<!-- شعار الهلال الأحمر في المنتصف -->
+<div class="logo">
+    <img src="https://i.postimg.cc/QxfYqjn1/c642fcf989b2eaae5d152dee81c66570.webp" alt="شعار الهلال الأحمر">
+</div>
+
+<div class="admin-container">
+    <h2 id="formTitle"> اختصار برقيات الشؤون الإدارية</h2>
+
+    <select id="requestType" onchange="switchForm()">
+        <option value="">اختر نوع الطلب</option>
+        <option value="استقالة">استقالة</option>
+        <option value="داخلية">إجازة داخلية</option>
+        <option value="خارجية">إجازة خارجية</option>
+        <option value="انتداب">انتداب</option>
+        <option value="تعيين">تعيين في الشؤون الإدارية</option>
+        <option value="إعفاء">إعفاء من الشؤون الإدارية</option>
+    </select>
+
+    <!-- نموذج الاستقالة -->
+    <div id="formResignation" class="form-section">
+        <label>رقم الصادر</label><input type="text" id="numResign" placeholder="3000">
+        <label>منشن المسعف (ID)</label><input type="text" id="idResign" placeholder="478680474533756958">
+        <label>اسم المسعف</label><input type="text" id="nameResign" placeholder="أسامة العنزي">
+        <label>الكود الميداني</label><input type="text" id="codeResign" placeholder="E-001">
+        <label>المستوى</label>
+        <select id="levelResign">
+            <option value="">-- اختر المستوى --</option>
+            <option value="<@&1271924904241004681>">مستوى 2</option>
+            <option value="<@&1271924904241004682>">مستوى 3</option>
+            <option value="<@&1271924904241004683>">مستوى 4</option>
+            <option value="<@&1271924904241004684>">مستوى 5</option>
+            <option value="<@&1271924904253456455>">مستوى 6</option>
+            <option value="<@&1271924904253456456>">مستوى 7</option>
+            <option value="<@&1271924904253456457>">مستوى 8</option>
+            <option value="<@&1271924904253456458>">مستوى 9</option>
+            <option value="<@&1272164752742940733>">مستوى 10</option>
+        </select>
+        <button onclick="copyResignation()">نسخ نص الاستقالة</button>
+    </div>
+
+    <!-- إجازة داخلية -->
+    <div id="formInternal" class="form-section">
+        <label>رقم الصادر</label><input type="text" id="numInternal" placeholder="3000">
+        <label>منشن المسعف (ID)</label><input type="text" id="idInternal" placeholder="478680474533756958">
+        <label>وقت البداية</label><input type="time" id="startTime">
+        <label>المدة (ساعات)</label>
+        <select id="hoursInternal">
+            <option value="">-- اختر المدة --</option>
+<option value="1">ساعة واحدة</option>
+    <option value="2">ساعتين</option>
+    <option value="3">3 ساعات</option>
+    <option value="4">4 ساعات</option>
+    <option value="5">5 ساعات</option>
+    <option value="6">6 ساعات</option>
+    <option value="7">7 ساعات</option>
+    <option value="8">8 ساعات</option>
+    <option value="9">9 ساعات</option>
+    <option value="10">10 ساعات</option>
+    <option value="11">11 ساعة</option>
+    <option value="12">12 ساعة</option>
+    <option value="13">13 ساعة</option>
+    <option value="14">14 ساعة</option>
+    <option value="15">15 ساعة</option>
+    <option value="16">16 ساعة</option>
+    <option value="17">17 ساعة</option>
+    <option value="18">18 ساعة</option>
+    <option value="19">19 ساعة</option>
+    <option value="20">20 ساعة</option>
+    <option value="21">21 ساعة</option>
+    <option value="22">22 ساعة</option>
+    <option value="23">23 ساعة</option>
+    <option value="24">24 ساعة</option>
+        </select>
+        <button onclick="copyInternal()">نسخ الإجازة الداخلية</button>
+    </div>
+
+    <!-- إجازة خارجية -->
+    <div id="formExternal" class="form-section">
+        <label>رقم الصادر</label><input type="text" id="numExternal" placeholder="3000">
+        <label>منشن المسعف (ID)</label><input type="text" id="idExternal" placeholder="478680474533756958">
+        <label>المدة (أيام)</label>
+        <select id="daysExternal">
+            <option value="">-- اختر المدة --</option>
+            <option value="5">5 أيام</option>
+            <option value="10">10 أيام</option>
+            <option value="15">15 يوم</option>
+            <option value="20">20 يوم</option>
+            <option value="30">30 يوم</option>
+        </select>
+        <button onclick="copyExternal()">نسخ الإجازة الخارجية</button>
+    </div>
+
+    <!-- انتداب -->
+    <div id="formAssignment" class="form-section">
+        <label>رقم الصادر</label><input type="text" id="numAssign" placeholder="3000">
+        <label>منشن المسعف (ID)</label><input type="text" id="idAssign" placeholder="478680474533756958">
+        <label>القطاع المنتدب إليه</label>
+        <select id="sectorAssign">
+            <option value="">-- اختر القطاع --</option>
+            <option value="<@&1364180836705894450>">الأمن العام</option>
+            <option value="<@&1364185180180316180>">كراج الميكانيك</option>
+            <option value="<@&1271924904325025833>">حرس الحدود</option>
+            <option value="<@&1329566391392796784>">الأمن الدبلوماسي</option>
+        </select>
+        <label>المدة</label>
+        <select id="daysAssign">
+            <option value="">-- اختر المدة --</option>
+            <option value="2">يومين</option>
+            <option value="3">3 أيام</option>
+            <option value="4">4 أيام</option>
+            <option value="5">5 أيام</option>
+        </select>
+        <button onclick="copyAssignment()">نسخ الانتداب</button>
+    </div>
+
+    <!-- تعيين -->
+    <div id="formAppointment" class="form-section">
+        <label>رقم الصادر</label><input type="text" id="numAppoint" placeholder="3000">
+        <label>منشن المسعف (ID)</label><input type="text" id="idAppoint" placeholder="478680474533756958">
+        <button onclick="copyAppointment()">نسخ التعيين</button>
+    </div>
+
+    <!-- إعفاء -->
+    <div id="formDismissal" class="form-section">
+        <label>رقم الصادر</label><input type="text" id="numDismiss" placeholder="2">
+        <label>منشن المسعف (ID)</label><input type="text" id="idDismiss" placeholder="478680474533756958">
+        <button onclick="copyDismissal()">نسخ الإعفاء</button>
+    </div>
+</div>
+
+<div id="toast" class="toast">تم النسخ بنجاح!</div>
+
+<footer id="smartFooter">
+    جميع الحقوق محفوظة لدى هيئة الهلال الأحمر لمدينة الثريا © 2025<br>
+    <span>تنفيذ وتطوير - أسامة العنزي</span>
+</footer>
+
+<script>
+// دالة مساعدة
+function $(id){return document.getElementById(id)}
+
+function switchForm(){
+    const v=$('requestType').value;
+    $('formTitle').textContent = v ? `نموذج ${v}` : 'الشؤون الإدارية';
+    document.querySelectorAll('.form-section').forEach(f=>f.classList.remove('active'));
+    if(v==='استقالة') $('formResignation').classList.add('active');
+    else if(v==='داخلية'){$('formInternal').classList.add('active');setSaudiTimeNow();}
+    else if(v==='خارجية') $('formExternal').classList.add('active');
+    else if(v==='انتداب') $('formAssignment').classList.add('active');
+    else if(v==='تعيين') $('formAppointment').classList.add('active');
+    else if(v==='إعفاء') $('formDismissal').classList.add('active');
+}
+
+function setSaudiTimeNow(){
+    const now = new Date();
+    const saudi = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Riyadh"}));
+    const h = String(saudi.getHours()).padStart(2,'0');
+    const m = String(saudi.getMinutes()).padStart(2,'0');
+    $('startTime').value = `${h}:${m}`;
+}
+
+// 1. الاستقالة
+function copyResignation(){
+    const num=$('numResign').value.trim(),id=$('idResign').value.trim(),
+          name=$('nameResign').value.trim(),code=$('codeResign').value.trim(),
+          level=$('levelResign').value;
+    if(!num||!id||!name||!code||!level) return alert('املأ جميع الحقول');
+    const text=`﷽**
+
+قرار صادر من مكتب الشؤون الإدارية
+
+\`صادر رقم : ${num}\`
+
+الموضوع : قبول استقالة
+
+تمت الموافقة على قبول استقالة المسعف المحترم :
+
+<@${id}>
+
+\`الاسم\` ${name}
+
+\`الكود الميداني\` ${code}
+
+\`المستوى\` ${level}
+
+مع كامل الشكر والتقدير على ما قدمتمه من جهود خلال فترة خدمتك ونسأل الله أن يوفقك في مسيرتك القادمة
+
+ترسل نسخة لـ <@&1271924904224362514>
+
+اعتماد وتوقيع:
+ 
+مسؤولين الـ <@&1271924904224362514>
+<@478680474533756958>
+<@1321526146390556796>
+**`;
+    copyToClipboard(text);
+}
+
+// 2. إجازة داخلية
+function copyInternal(){
+    const num=$('numInternal').value.trim(),id=$('idInternal').value.trim(),
+          time=$('startTime').value,hours=$('hoursInternal').value;
+    if(!num||!id||!time||!hours) return alert('املأ جميع الحقول');
+
+    const [h,m]=time.split(':');
+    const start=new Date();
+    start.setHours(parseInt(h),parseInt(m),0,0);
+    start.setMinutes(start.getMinutes() + start.getTimezoneOffset() + 180); // تحويل لتوقيت السعودية
+    const end=new Date(start.getTime()+hours*3600000);
+
+    const f=d=>`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+    const t12=d=>{let hr=d.getHours()%12||12; return `${hr}:${String(d.getMinutes()).padStart(2,'0')} ${d.getHours()>=12?'مساءً':'صباحًا'}`;};
+
+    const text=`﷽**
+
+قرار صادر من مكتب الشؤون الإدارية
+
+\`صادر رقم : ${num}\`
+
+الموضوع : إجازة داخلية
+
+تمت الموافقة على منح المسعف المحترم إجازة داخلية
+
+<@${id}>
+
+\`\`\`تاريخ البداية : ${f(start)} - الساعة ${t12(start)}\`\`\`
+\`\`\`تاريخ العودة : ${f(end)} - الساعة ${t12(end)}\`\`\`
+
+
+ترسل نسخة لـ <@&1271924904224362514>
+
+اعتماد وتوقيع:
+
+مسؤولين الـ <@&1271924904224362514>
+<@478680474533756958>
+<@1321526146390556796>
+**`;
+    copyToClipboard(text);
+}
+
+// 3. إجازة خارجية
+function copyExternal(){
+    const num=$('numExternal').value.trim(),id=$('idExternal').value.trim(),
+          days=$('daysExternal').value;
+    if(!num||!id||!days) return alert('املأ الحقول');
+    const end=new Date(); end.setDate(end.getDate()+parseInt(days));
+    const f=`${end.getFullYear()}/${String(end.getMonth()+1).padStart(2,'0')}/${String(end.getDate()).padStart(2,'0')}`;
+
+    const text=`﷽**
+
+قرار صادر من مكتب الشؤون الإدارية
+
+\`صادر رقم : ${num}\`
+
+الموضوع : إجازة خارجية
+
+تمت الموافقة على منح المسعف المحترم إجازة خارجية
+
+<@${id}>
+
+\`المدة : ${days} يوم\`
+
+تنتهي في : ${f}
+
+ترسل نسخة لـ <@&1271924904224362514>
+
+اعتماد وتوقيع:
+
+مسؤولين الـ <@&1271924904224362514>
+<@478680474533756958>
+<@1321526146390556796>
+**`;
+    copyToClipboard(text);
+}
+
+// 4. انتداب
+function copyAssignment(){
+    const num=$('numAssign').value.trim(),id=$('idAssign').value.trim(),
+          sector=$('sectorAssign').value,days=$('daysAssign').value;
+    if(!num||!id||!sector||!days) return alert('املأ الحقول');
+
+    const start=new Date(), end=new Date(start.getTime()+parseInt(days)*86400000);
+    const f=d=>`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+
+    const text=`﷽**
+
+قرار صادر من مكتب الشؤون الإدارية
+
+\`صادر رقم : ${num}\`
+
+الموضوع : انتداب
+
+تمت الموافقة على انتداب المسعف المحترم
+
+<@${id}>
+
+إلى القطاع : ${sector}
+
+\`المدة : ${days} يوم\`
+
+\`\`\`يبدأ الانتداب في تاريخ : ${f(start)}
+ينتهي في تاريخ : ${f(end)}\`\`\`
+
+ترسل نسخة لـ <@&1271924904224362514>
+
+اعتماد وتوقيع:
+
+مسؤولين الـ <@&1271924904224362514>
+<@478680474533756958>
+<@1321526146390556796>
+**`;
+    copyToClipboard(text);
+}
+
+// 5. تعيين في الشؤون الإدارية (يبقى كما هو لأنه مطابق لطلبك)
+function copyAppointment(){
+    const num=$('numAppoint').value.trim(),id=$('idAppoint').value.trim();
+    if(!num||!id) return alert('املأ الحقول');
+    const text=`﷽**
+
+قرار صادر من مسؤولين الشؤون الأدارية
+
+\`صادر رقم : ${num}\`
+
+الموضوع : تعيين في الشؤون الإدارية
+
+يتضمن الموافقة على تعيين في قسم ( الإجازات والاستقالات )
+
+المسعف المحترم : <@${id}>
+
+ترسل نسخة لـ <@&1271924904224362514>
+
+اعتماد وتوقيع:
+
+مسؤولين الـ <@&1271924904224362514>
+<@478680474533756958>
+<@1321526146390556796>
+**`;
+    copyToClipboard(text);
+}
+
+// 6. إعفاء من الشؤون الإدارية (يبقى كما هو)
+function copyDismissal(){
+    const num=$('numDismiss').value.trim(),id=$('idDismiss').value.trim();
+    if(!num||!id) return alert('املأ الحقول');
+    const text=`﷽**
+
+قرار صادر من مسؤولين الشؤون الأدارية
+
+\`صادر رقم : ${num}\`
+
+الموضوع : إعفاء من الشؤون الإدارية
+
+يتم إعفاء المسعف المذكور أدناه من مهام الشؤون الإدارية
+
+<@${id}>
+
+ترسل نسخة لـ <@&1271924904224362514>
+
+اعتماد وتوقيع:
+
+مسؤولين الـ <@&1271924904224362514>
+<@478680474533756958>
+<@1321526146390556796>
+**`;
+    copyToClipboard(text);
+}
+
+// دالة النسخ + التوست
+function copyToClipboard(t){
+    navigator.clipboard.writeText(t).then(()=>{
+        const toast=$('toast');toast.classList.add('show');
+        setTimeout(()=>toast.classList.remove('show'),2000);
+    }).catch(()=>alert('تم النسخ!\n\n'+t));
+}
+
+/* باقي الكود (التذييل الذكي + النجوم) يبقى كما هو */
+let hideTimeout;
+function showFooter(){
+    clearTimeout(hideTimeout);
+    $('smartFooter').classList.add('show');
+    hideTimeout = setTimeout(()=>$('smartFooter').classList.remove('show'), 3000);
+}
+['mousemove','keydown','scroll','touchmove'].forEach(e=>document.addEventListener(e,showFooter));
+
+const canvas=document.getElementById('stars'),ctx=canvas.getContext('2d');
+canvas.width=innerWidth;canvas.height=innerHeight;
+window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight});
+const stars=Array.from({length:700},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2.5+0.5,s:Math.random()*2+0.5}));
+(function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#fff';
+    stars.forEach(s=>{
+        ctx.globalAlpha=0.6+Math.random()*0.4;
+        ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+        s.y+=s.s;if(s.y>canvas.height)s.y=0;
+    });
+    requestAnimationFrame(animate);
+})();
+</script>
+</body>
+</html>
