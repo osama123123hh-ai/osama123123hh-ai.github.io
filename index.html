@@ -144,7 +144,7 @@
     <!-- نموذج الاستقالة -->
     <div id="formResignation" class="form-section">
         <label>رقم الصادر</label><input type="text" id="numResign" placeholder="3000">
-        <label>منشن المسعف (ID)</label><input type="text" id="idResign" placeholder="478680474533756958">
+        <label>منشن المسعف (ID)</label><input type="text" id="idResign" placeholder="1321526146390556796">
         <label>اسم المسعف</label><input type="text" id="nameResign" placeholder="أسامة العنزي">
         <label>الكود الميداني</label><input type="text" id="codeResign" placeholder="E-001">
         <label>المستوى</label>
@@ -166,7 +166,7 @@
     <!-- إجازة داخلية -->
     <div id="formInternal" class="form-section">
         <label>رقم الصادر</label><input type="text" id="numInternal" placeholder="3000">
-        <label>منشن المسعف (ID)</label><input type="text" id="idInternal" placeholder="478680474533756958">
+        <label>منشن المسعف (ID)</label><input type="text" id="idInternal" placeholder="1321526146390556796">
         <label>وقت البداية</label><input type="time" id="startTime">
         <label>المدة (ساعات)</label>
         <select id="hoursInternal">
@@ -178,23 +178,6 @@
     <option value="5">5 ساعات</option>
     <option value="6">6 ساعات</option>
     <option value="7">7 ساعات</option>
-    <option value="8">8 ساعات</option>
-    <option value="9">9 ساعات</option>
-    <option value="10">10 ساعات</option>
-    <option value="11">11 ساعة</option>
-    <option value="12">12 ساعة</option>
-    <option value="13">13 ساعة</option>
-    <option value="14">14 ساعة</option>
-    <option value="15">15 ساعة</option>
-    <option value="16">16 ساعة</option>
-    <option value="17">17 ساعة</option>
-    <option value="18">18 ساعة</option>
-    <option value="19">19 ساعة</option>
-    <option value="20">20 ساعة</option>
-    <option value="21">21 ساعة</option>
-    <option value="22">22 ساعة</option>
-    <option value="23">23 ساعة</option>
-    <option value="24">24 ساعة</option>
         </select>
         <button onclick="copyInternal()">نسخ الإجازة الداخلية</button>
     </div>
@@ -202,7 +185,7 @@
     <!-- إجازة خارجية -->
     <div id="formExternal" class="form-section">
         <label>رقم الصادر</label><input type="text" id="numExternal" placeholder="3000">
-        <label>منشن المسعف (ID)</label><input type="text" id="idExternal" placeholder="478680474533756958">
+        <label>منشن المسعف (ID)</label><input type="text" id="idExternal" placeholder="1321526146390556796">
         <label>المدة (أيام)</label>
         <select id="daysExternal">
             <option value="">-- اختر المدة --</option>
@@ -218,7 +201,7 @@
     <!-- انتداب -->
     <div id="formAssignment" class="form-section">
         <label>رقم الصادر</label><input type="text" id="numAssign" placeholder="3000">
-        <label>منشن المسعف (ID)</label><input type="text" id="idAssign" placeholder="478680474533756958">
+        <label>منشن المسعف (ID)</label><input type="text" id="idAssign" placeholder="1321526146390556796">
         <label>القطاع المنتدب إليه</label>
         <select id="sectorAssign">
             <option value="">-- اختر القطاع --</option>
@@ -241,14 +224,14 @@
     <!-- تعيين -->
     <div id="formAppointment" class="form-section">
         <label>رقم الصادر</label><input type="text" id="numAppoint" placeholder="3000">
-        <label>منشن المسعف (ID)</label><input type="text" id="idAppoint" placeholder="478680474533756958">
+        <label>منشن المسعف (ID)</label><input type="text" id="idAppoint" placeholder="1321526146390556796">
         <button onclick="copyAppointment()">نسخ التعيين</button>
     </div>
 
     <!-- إعفاء -->
     <div id="formDismissal" class="form-section">
         <label>رقم الصادر</label><input type="text" id="numDismiss" placeholder="2">
-        <label>منشن المسعف (ID)</label><input type="text" id="idDismiss" placeholder="478680474533756958">
+        <label>منشن المسعف (ID)</label><input type="text" id="idDismiss" placeholder="1321526146390556796">
         <button onclick="copyDismissal()">نسخ الإعفاء</button>
     </div>
 </div>
@@ -315,8 +298,8 @@ function copyResignation(){
 اعتماد وتوقيع:
  
 مسؤولين الـ <@&1271924904224362514>
-<@478680474533756958>
 <@1321526146390556796>
+<@1207726273963491348>
 **`;
     copyToClipboard(text);
 }
@@ -357,7 +340,7 @@ function copyInternal(){
 اعتماد وتوقيع:
 
 مسؤولين الـ <@&1271924904224362514>
-<@478680474533756958>
+<@1321526146390556796>
 <@1321526146390556796>
 **`;
     copyToClipboard(text);
@@ -392,7 +375,7 @@ function copyExternal(){
 اعتماد وتوقيع:
 
 مسؤولين الـ <@&1271924904224362514>
-<@478680474533756958>
+<@1321526146390556796>
 <@1321526146390556796>
 **`;
     copyToClipboard(text);
@@ -431,7 +414,7 @@ function copyAssignment(){
 اعتماد وتوقيع:
 
 مسؤولين الـ <@&1271924904224362514>
-<@478680474533756958>
+<@1321526146390556796>
 <@1321526146390556796>
 **`;
     copyToClipboard(text);
@@ -458,7 +441,7 @@ function copyAppointment(){
 اعتماد وتوقيع:
 
 مسؤولين الـ <@&1271924904224362514>
-<@478680474533756958>
+<@1321526146390556796>
 <@1321526146390556796>
 **`;
     copyToClipboard(text);
@@ -485,7 +468,7 @@ function copyDismissal(){
 اعتماد وتوقيع:
 
 مسؤولين الـ <@&1271924904224362514>
-<@478680474533756958>
+<@1321526146390556796>
 <@1321526146390556796>
 **`;
     copyToClipboard(text);
